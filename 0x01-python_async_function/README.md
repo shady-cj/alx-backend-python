@@ -73,3 +73,32 @@ bob@dylan:~$ ./1-main.py
 The output for your answers might look a little different and that’s okay.
 
 **File**: `1-concurrent_coroutines`
+
+
+
+
+
+### 2. Measure the runtime
+From the previous file, import wait_n into 2-measure_runtime.py.
+
+Create a `measure_time` function with integers `n` and `max_delay` as arguments that measures the total execution time for `wait_n(n, max_delay)`, and returns `total_time / n`. Your function should return a `float`.
+
+Use the time module to measure an approximate elapsed time.
+
+
+```
+bob@dylan:~$ cat 2-main.py
+#!/usr/bin/env python3
+
+measure_time = __import__('2-measure_runtime').measure_time
+
+n = 5
+max_delay = 9
+
+print(measure_time(n, max_delay))
+
+bob@dylan:~$ ./2-main.py
+1.759705400466919
+```
+
+**File**: `2-measure_runtime.py`
