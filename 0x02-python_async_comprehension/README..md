@@ -43,3 +43,36 @@ bob@dylan:~$ ./0-main.py
 
 
 **File**: `0-async_generator.py`
+
+
+
+
+
+### 1. Async Comprehensions
+
+Import `async_generator` from the previous task and then write a coroutine called `async_comprehension` that takes no arguments.
+
+The coroutine will collect 10 random numbers using an async comprehensing over `async_generator`, then return the 10 random numbers.
+
+
+
+```
+bob@dylan:~$ cat 1-main.py
+#!/usr/bin/env python3
+
+import asyncio
+
+async_comprehension = __import__('1-async_comprehension').async_comprehension
+
+
+async def main():
+    print(await async_comprehension())
+
+asyncio.run(main())
+
+bob@dylan:~$ ./1-main.py
+[9.861842105071727, 8.572355293354995, 1.7467182056248265, 4.0724372912858575, 0.5524750922145316, 8.084266576021555, 8.387128918690468, 1.5486451376520916, 7.713335177885325, 7.673533267041574]
+```
+
+
+**File**: `1-async_comprehension`
