@@ -33,8 +33,8 @@ class TestGithubOrgClient(unittest.TestCase):
         Testing the _public_repos_url from the GithubOrgClient
         class
         """
-        with patch("client.GithubOrgClient.org", new_callable=PropertyMock) \
-             as mock_gitclient_org:
+        with patch("client.GithubOrgClient.org",
+             new_callable=PropertyMock) as mock_gitclient_org:
             payload = {"repos_url": "abc"}
             mock_gitclient_org.return_value = payload
             github_client = GithubOrgClient("google")
