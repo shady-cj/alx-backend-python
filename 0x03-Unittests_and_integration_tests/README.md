@@ -45,3 +45,19 @@ The body of the test method should not be longer than 2 lines.
 
 
 **File**: `test_utils.py`
+
+
+
+### 1. Parameterize a unit test
+
+Implement `TestAccessNestedMap.test_access_nested_map_exception`. Use the `assertRaises` context manager to test that a `KeyError` is raised for the following inputs (use `@parameterized.expand`):
+
+```
+nested_map={}, path=("a",)
+nested_map={"a": 1}, path=("a", "b")
+```
+Also make sure that the exception message is as expected.
+
+
+**File**: `test_utils.py`
+
