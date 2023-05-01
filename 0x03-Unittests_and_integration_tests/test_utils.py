@@ -54,7 +54,8 @@ class TestGetJson(unittest.TestCase):
             mock_response = MagicMock()
             mock_response.json.return_value = {"test_payload": test_payload}
             requests.get.return_value = mock_response
-            self.assertEqual(get_json(test_url).get("test_payload"), test_payload)
+            self.assertEqual(get_json(test_url).get("test_payload"),
+                             test_payload)
 
 
 class TestMemoize(unittest.TestCase):
@@ -83,7 +84,7 @@ class TestMemoize(unittest.TestCase):
                 return self.a_method()
 
         test_class = TestClass()
-        test_class.a_method = MagicMock(return_value=42)    
+        test_class.a_method = MagicMock(return_value=42)
         self.assertEqual(test_class.a_property, 42)
         self.assertEqual(test_class.a_property, 42)
         test_class.a_method.assert_called_once()
