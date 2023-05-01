@@ -170,3 +170,20 @@ Test that the mocked property and the mocked `get_json` was called once.
 
 
 **File**: `test_client.py`
+
+
+
+### 7. Parameterize
+
+Implement `TestGithubOrgClient.test_has_license` to unit-test `GithubOrgClient.has_license.`
+
+Parametrize the test with the following inputs
+
+```
+repo={"license": {"key": "my_license"}}, license_key="my_license"
+repo={"license": {"key": "other_license"}}, license_key="my_license"
+```
+You should also parameterize the expected returned value.
+
+
+**File**: `test_client.py`
