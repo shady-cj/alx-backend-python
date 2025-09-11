@@ -6,20 +6,21 @@ async def async_fetch_users():
     async with aiosqlite.connect("users.db") as db:
         db.row_factory = aiosqlite.Row
         async with db.execute("SELECT * FROM users") as cursor:
-            async for row in cursor:
-                print(dict(row))
+            return await cursor.fetchall()
 
 
 async def async_fetch_older_users():
     async with aiosqlite.connect("users.db") as db:
         db.row_factory = aiosqlite.Row
-        async with db.execute("SELECT * FROM users WHERE age > ?", (40,)) as cursor:
-            async for row in cursor:
-                print(dict(row))
+        async with db.execute("SELECT * FROM users WHERE id > ?", (2,)) as cursor:
+            return await cursor.fetchall()
 
 
 async def fetch_concurrently():
-    await asyncio.gather(async_fetch_users(), async_fetch_older_users())
+    results = await asyncio.gather(async_fetch_users(), async_fetch_older_users())
+    for result in results:
+        for row in result:
+            print(dict(row))
 
 
 asyncio.run(fetch_concurrently())
