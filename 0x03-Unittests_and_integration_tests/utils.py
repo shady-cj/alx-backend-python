@@ -1,6 +1,5 @@
 #!/usr/bin/env python3
-"""Generic utilities for github org client.
-"""
+"""Generic utilities for github org client."""
 import requests
 from functools import wraps
 from typing import (
@@ -41,8 +40,7 @@ def access_nested_map(nested_map: Mapping, path: Sequence) -> Any:
 
 
 def get_json(url: str) -> Dict:
-    """Get JSON from remote URL.
-    """
+    """Get JSON from remote URL."""
     response = requests.get(url)
     return response.json()
 
@@ -67,7 +65,7 @@ def memoize(fn: Callable) -> Callable:
 
     @wraps(fn)
     def memoized(self):
-        """"memoized wraps"""
+        """ "memoized wraps"""
         if not hasattr(self, attr_name):
             setattr(self, attr_name, fn(self))
         return getattr(self, attr_name)

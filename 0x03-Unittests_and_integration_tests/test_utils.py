@@ -12,21 +12,21 @@ class TestAccessNestedMap(unittest.TestCase):
     """
     Testing the access_nested_map function
     """
-    @parameterized.expand([
-        ({"a": 1}, ("a",), 1),
-        ({"a": {"b": 2}}, ("a",), {"b": 2}),
-        ({"a": {"b": 2}}, ("a", "b"), 2)
-    ])
+
+    @parameterized.expand(
+        [
+            ({"a": 1}, ("a",), 1),
+            ({"a": {"b": 2}}, ("a",), {"b": 2}),
+            ({"a": {"b": 2}}, ("a", "b"), 2),
+        ]
+    )
     def test_access_nested_map(self, nested_map, path, expected):
         """
         Writing test cases for the test access nested map.
         """
         self.assertEqual(access_nested_map(nested_map, path), expected)
 
-    @parameterized.expand([
-        ({}, ("a",), "a"),
-        ({"a": 1}, ("a", "b"), "b")
-    ])
+    @parameterized.expand([({}, ("a",), "a"), ({"a": 1}, ("a", "b"), "b")])
     def test_access_nested_map_exception(self, nested_map, path, key):
         """
         Testing access_nested_map for when it raises exccption
@@ -41,21 +41,23 @@ class TestGetJson(unittest.TestCase):
     Tests the get_json() function in the utils module
     """
 
-    @parameterized.expand([
-        ("http://example.com", {"payload": True}),
-        ("http://holberton.io", {"payload": False})
-    ])
+    @parameterized.expand(
+        [
+            ("http://example.com", {"payload": True}),
+            ("http://holberton.io", {"payload": False}),
+        ]
+    )
     def test_get_json(self, test_url, test_payload):
         """
         Testing the get_json() function and also patching the
         request.get library.
         """
-        with patch('utils.requests') as requests:
+        with patch("utils.requests") as requests:
             mock_response = MagicMock()
-            mock_response.json.return_value = {"test_payload": test_payload}
+            mock_response.json.return_value = test_payload
             requests.get.return_value = mock_response
-            self.assertEqual(get_json(test_url).get("test_payload"),
-                             test_payload)
+            self.assertEqual(get_json(test_url), test_payload)
+            requests.get.assert_called_with(test_url)
 
 
 class TestMemoize(unittest.TestCase):
@@ -67,6 +69,7 @@ class TestMemoize(unittest.TestCase):
         """
         Testing the memoize function
         """
+
         class TestClass:
             """
             Defining a test class
