@@ -7,7 +7,6 @@ from parameterized import parameterized, parameterized_class
 from unittest.mock import patch, MagicMock, PropertyMock
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
-import utils
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -86,7 +85,7 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def get_patcher(cls):
 
-        cls.patcher = patch("utils.requests.get")
+        cls.patcher = patch("requests.get")
         cls.mock_object = cls.patcher.start()
 
     @classmethod
