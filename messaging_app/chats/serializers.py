@@ -1,10 +1,32 @@
-from serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework import serializers
 from .models import User, Message, Conversation
 
 class UserSerializer(ModelSerializer):
+    confirm_password = serializers.CharField(write_only=True)
+    password = serializers.CharField(write_only=True)
     class Meta:
         model = User
-        exclude = ['password_hash']
+        fields = (
+            'user_id', 'username', 'password',
+            'confirm_password', 'first_name', 'last_name', 
+            'email', 'phone_number', 'role', 'created_at',
+            
+            )
+
+    
+
+    def validate(self, attrs):
+        password = attrs.get('password')
+        confirm_password = attrs.get('confirm_password')
+        if password != confirm_password:
+            raise serializers.ValidationError('passwords do not match')
+        return attrs
+    def create(self, validated_data):
+        validated_data.pop("confirm_password")
+        instance = User.objects.create_user(**validated_data)
+        return instance
+
 
     
 class MessageSerializer(ModelSerializer):
