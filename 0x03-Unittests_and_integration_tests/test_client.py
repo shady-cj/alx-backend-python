@@ -7,6 +7,7 @@ from parameterized import parameterized, parameterized_class
 from unittest.mock import patch, MagicMock, PropertyMock
 from client import GithubOrgClient
 from fixtures import TEST_PAYLOAD
+import requests
 
 
 class TestGithubOrgClient(unittest.TestCase):
@@ -80,27 +81,25 @@ class TestGithubOrgClient(unittest.TestCase):
 class TestIntegrationGithubOrgClient(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
-        cls.get_patcher()
+        cls.get_patcher = patch("requests.get")
+        cls.mock_object = cls.get_patcher.start()
+        cls.mock_object.side_effect = cls.side_effect
 
     @classmethod
-    def get_patcher(cls):
-
-        cls.patcher = patch("requests.get")
-        cls.mock_object = cls.patcher.start()
-
-    @classmethod
-    def side_effect(cls, url_payload):
+    def side_effect(cls, url, *args, **kwargs):
         mock = MagicMock()
-        mock.json.return_value = url_payload
-        cls.mock_object = mock
-        return cls.mock_object
+
+        if url == "https://api.github.com/orgs/google":
+            mock.json.return_value = cls.org_payload
+        elif url == "https://api.github.com/orgs/google/repos":
+            mock.json.return_value = cls.repos_payload
+        mock.status_code.return_value = 200
+        return mock
 
     @classmethod
     def tearDownClass(cls):
-        cls.patcher.stop()
+        cls.get_patcher.stop()
 
     def test_public_repos(self):
-        mock = self.side_effect(self.repos_payload)
         github_client = GithubOrgClient("google")
-        # self.assertEqual(github_client.public_repos(), self.repos_payload)
-        # print(github_client.public_repos())
+        self.assertEqual(github_client.public_repos(), self.expected_repos)
