@@ -42,7 +42,7 @@ class MessageSerializer(ModelSerializer):
 
 
 class ConversationSerializer(ModelSerializer):
-    messages = serializers.SerializerMethodField(many=True, read_only=True)
+    messages = serializers.SerializerMethodField()
 
     class Meta:
         model = Conversation
