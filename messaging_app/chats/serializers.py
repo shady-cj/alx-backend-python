@@ -1,4 +1,4 @@
-from rest_framework.serializers import ModelSerializer, SerializerMethodField
+from rest_framework.serializers import ModelSerializer
 from rest_framework import serializers
 from .models import User, Message, Conversation
 
@@ -42,7 +42,7 @@ class MessageSerializer(ModelSerializer):
 
 
 class ConversationSerializer(ModelSerializer):
-    messages = SerializerMethodField(many=True, read_only=True)
+    messages = serializers.SerializerMethodField(many=True, read_only=True)
 
     class Meta:
         model = Conversation
