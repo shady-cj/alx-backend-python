@@ -1,4 +1,4 @@
-from serializers import ModelSerializer
+from serializers import ModelSerializer, SerializerMethodField
 from .models import User, Message, Conversation
 
 class UserSerializer(ModelSerializer):
@@ -12,8 +12,20 @@ class MessageSerializer(ModelSerializer):
         model = Message
         fields = '__all__'
 
+# class ConversationSerializer(ModelSerializer):
+#     messages = MessageSerializer(many=True, read_only=True)
+#     class Meta:
+#         model = Conversation
+#         fields = '__all__'
+
+
 class ConversationSerializer(ModelSerializer):
-    messages = MessageSerializer(many=True, read_only=True)
+    messages = SerializerMethodField(many=True, read_only=True)
+
     class Meta:
         model = Conversation
-        fields = '__all__'
+        fields = ('conversation_id', 'participants_id', 'created_at', 'messages')
+
+    def get_messages(self, instance):
+        messages = instance.messages
+        return MessageSerializer(messages, many=True, read_only=True)
