@@ -79,14 +79,22 @@ class TestGithubOrgClient(unittest.TestCase):
     ("org_payload", "repos_payload", "expected_repos", "apache2_repos"), TEST_PAYLOAD
 )
 class TestIntegrationGithubOrgClient(unittest.TestCase):
+    """Integration tests for the GithubOrgClient class"""
+
     @classmethod
     def setUpClass(cls):
+        """
+        Setting up the class for the integration tests
+        """
         cls.get_patcher = patch("requests.get")
         cls.mock_object = cls.get_patcher.start()
         cls.mock_object.side_effect = cls.side_effect
 
     @classmethod
     def side_effect(cls, url, *args, **kwargs):
+        """
+        Controlling the side effect of the mock object
+        """
         mock = MagicMock()
 
         if url == "https://api.github.com/orgs/google":
@@ -98,13 +106,22 @@ class TestIntegrationGithubOrgClient(unittest.TestCase):
 
     @classmethod
     def tearDownClass(cls):
+        """
+        Tearing down the class after the integration tests
+        """
         cls.get_patcher.stop()
 
     def test_public_repos(self):
+        """
+        Testing the public_repos method of the GithubOrgClient class
+        """
         github_client = GithubOrgClient("google")
         self.assertEqual(github_client.public_repos(), self.expected_repos)
 
     def test_public_repos_with_license(self):
+        """
+        Testing the public_repos method of the GithubOrgClient class with a license
+        """
         github_client = GithubOrgClient(
             "google",
         )
