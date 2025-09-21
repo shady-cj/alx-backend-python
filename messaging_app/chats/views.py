@@ -2,10 +2,10 @@ from django.shortcuts import render
 
 # Create your views here.
 from .models import Conversation, Message, User
-from serializers import ConversationSerializer, MessageSerializer, UserSerializer
+from .serializers import ConversationSerializer, MessageSerializer, UserSerializer
 
 from rest_framework import viewsets, filters
-from rest_framework.response import Response, status
+from rest_framework import status
 
 
 class ConversationViewSet(viewsets.ModelViewSet):

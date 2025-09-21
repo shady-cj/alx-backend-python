@@ -31,9 +31,9 @@ class Message(models.Model):
 
 class Conversation(models.Model):
     conversation_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    participants_id = models.ManyToManyField(User, related_name='conversations', null=True, blank=True)
+    participants_id = models.ManyToManyField(User, related_name='conversations', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-    messages = models.ManyToManyField(Message, related_name='conversation', null=True, blank=True)
+    messages = models.ManyToManyField(Message, related_name='conversation', blank=True)
 
 
 

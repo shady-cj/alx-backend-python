@@ -81,7 +81,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'chats.models.User'
+AUTH_USER_MODEL = 'chats.User'
 
 
 # REST FRAMEWORK SETTINGS
