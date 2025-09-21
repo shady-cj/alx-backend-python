@@ -1,8 +1,8 @@
 from django.shortcuts import render
 
 # Create your views here.
-from .models import Conversation, Message
-from serializers import ConversationSerializer, MessageSerializer
+from .models import Conversation, Message, User
+from serializers import ConversationSerializer, MessageSerializer, UserSerializer
 
 from rest_framework import viewsets, filters
 from rest_framework.response import Response, status
@@ -23,3 +23,10 @@ class MessageViewSet(viewsets.ModelViewSet):
     def get_queryset(self):
         return super().get_queryset().filter(conversation__conversation_id=self.kwargs['conversation_conversation_id']).distinct()
 
+
+
+class UserViewSet(viewsets.ModelViewSet):
+    queryset = User.objects.all()
+    serializer_class = UserSerializer
+    filter_backends = [filters.SearchFilter]
+    search_fields = ['username', 'email', 'first_name', 'last_name']
