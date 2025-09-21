@@ -50,4 +50,4 @@ class ConversationSerializer(ModelSerializer):
 
     def get_messages(self, instance):
         messages = instance.messages
-        return MessageSerializer(messages, many=True, read_only=True)
+        return MessageSerializer(messages, many=True, read_only=True).data

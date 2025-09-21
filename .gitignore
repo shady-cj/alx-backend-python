@@ -6,3 +6,4 @@ instance/
 .pytest_cache/
 .coverage
 htmlcov/
+django-venv/
