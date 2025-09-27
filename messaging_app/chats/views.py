@@ -5,22 +5,29 @@ from .models import Conversation, Message, User
 from .serializers import ConversationSerializer, MessageSerializer, UserSerializer
 
 from rest_framework import viewsets, filters, permissions
+from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework import status
 from .permissions import IsParticipantOfConversation
+from .filters import MessageFilter
+from .pagination import CustomPagination
+
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     permission_classes = [IsParticipantOfConversation]
     search_fields = ['participants_id__username', 'messages__message_body']
+    filterset_fields = ["participants_id"]
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
-    filter_backends = [filters.SearchFilter]
+    filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     search_fields = ['message_body', 'sender_id__username']
+    filterset_class = MessageFilter
     permission_classes = [IsParticipantOfConversation]
+    pagination_class = CustomPagination
 
     def get_queryset(self):
         # Message.objects.filter()

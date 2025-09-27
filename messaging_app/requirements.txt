@@ -2,3 +2,4 @@ Django>=4.2,<5.0
 djangorestframework
 djangorestframework-simplejwt
 drf-nested-routers
+django-filter
