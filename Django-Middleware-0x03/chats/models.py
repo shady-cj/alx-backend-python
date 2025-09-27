@@ -26,7 +26,8 @@ class Message(models.Model):
     sender_id = models.ForeignKey(User, related_name="messages", null=True, on_delete=models.SET_NULL)
     message_body = models.TextField(null=False, blank=False)
     sent_at = models.DateTimeField(auto_now_add=True)
-    
+    class Meta:
+        ordering = ['-sent_at']
 
 
 class Conversation(models.Model):
