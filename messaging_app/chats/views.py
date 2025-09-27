@@ -23,6 +23,8 @@ class MessageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsParticipantOfConversation]
 
     def get_queryset(self):
+        # Message.objects.filter()
+        # raise HTTP_403_FORBIDDEN if not permitted
         user = self.request.user
         return super().get_queryset().filter(conversation__conversation_id=self.kwargs['conversation_pk'], conversation__participants_id=user.user_id).distinct()
 

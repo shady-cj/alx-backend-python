@@ -5,7 +5,7 @@ class IsParticipantOfConversation(permissions.BasePermission):
     def has_permission(self, request, view):
         from .views import ConversationViewSet
 
-        print("request", request.user)
+        #  ["PUT", "PATCH", "DELETE"]
         if not request.user or not request.user.is_authenticated:
             return False
         
