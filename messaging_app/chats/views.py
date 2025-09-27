@@ -6,13 +6,13 @@ from .serializers import ConversationSerializer, MessageSerializer, UserSerializ
 
 from rest_framework import viewsets, filters, permissions
 from rest_framework import status
-from .permissions import MessageConversationPermission
-
+from .permissions import IsParticipantOfConversation
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
     serializer_class = ConversationSerializer
     filter_backends = [filters.SearchFilter]
+    permission_classes = [IsParticipantOfConversation]
     search_fields = ['participants_id__username', 'messages__message_body']
 
 class MessageViewSet(viewsets.ModelViewSet):
@@ -20,7 +20,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['message_body', 'sender_id__username']
-    permission_classes = [permissions.IsAuthenticated, MessageConversationPermission]
+    permission_classes = [IsParticipantOfConversation]
 
     def get_queryset(self):
         user = self.request.user
