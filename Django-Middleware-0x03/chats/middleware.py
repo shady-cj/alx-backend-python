@@ -1,4 +1,5 @@
 import datetime
+from rest_framework_simplejwt.authentication import JWTAuthentication
 from django.http import HttpResponse
 
 class RequestLoggingMiddleware:
@@ -61,3 +62,31 @@ class OffensiveLanguageMiddleware:
             
 
         
+
+class RolepermissionMiddleware:
+    def __init__(self, get_response):
+        self.get_response = get_response
+        self.jwt_auth = JWTAuthentication()
+        self.admin_actions = {
+            '/api/auth/users/': {"method": "GET"},
+            '/api/conversations/': {"method": "GET"}
+        }
+
+    
+    def __call__(self, request):
+        if not request.user or request.user.is_anonymous:
+            try:
+                user, validated_token = self.jwt_auth.authenticate(request)
+                request.user = user
+                request.token = validated_token
+            except Exception:
+                pass  # Leave as AnonymousUser if token is invalid
+    
+        return self.get_response(request)
+
+
+    def process_view(self, request, view_func, view_args, view_kwargs):
+        if self.admin_actions.get(request.path) and request.method == self.admin_actions.get(request.path).get("method"):
+            if not request.user.is_authenticated or request.user != 'ADMIN':
+                return HttpResponse("Unauthorized", status=401)
+        return None  # continue as normal
