@@ -6,6 +6,7 @@ from .serializers import ConversationSerializer, MessageSerializer, UserSerializ
 
 from rest_framework import viewsets, filters, permissions
 from rest_framework import status
+from .permissions import MessageConversationPermission
 
 
 class ConversationViewSet(viewsets.ModelViewSet):
@@ -19,10 +20,10 @@ class MessageViewSet(viewsets.ModelViewSet):
     serializer_class = MessageSerializer
     filter_backends = [filters.SearchFilter]
     search_fields = ['message_body', 'sender_id__username']
+    permission_classes = [permissions.IsAuthenticated, MessageConversationPermission]
 
     def get_queryset(self):
         user = self.request.user
-        print(user, self.kwargs)
         return super().get_queryset().filter(conversation__conversation_id=self.kwargs['conversation_pk'], conversation__participants_id=user.user_id).distinct()
 
 
