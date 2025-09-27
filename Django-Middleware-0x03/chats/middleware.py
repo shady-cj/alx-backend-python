@@ -78,7 +78,7 @@ class RolepermissionMiddleware:
             try:
                 user, validated_token = self.jwt_auth.authenticate(request)
                 request.user = user
-                request.token = validated_token
+                request.auth = validated_token
             except Exception:
                 pass  # Leave as AnonymousUser if token is invalid
     

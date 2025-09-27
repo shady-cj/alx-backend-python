@@ -103,3 +103,7 @@
 2025-09-27 19:08:33.144733 - User: ceejay - Path: /api/auth/users/
 2025-09-27 19:09:10.614647 - User: ceejay - Path: /api/auth/users/
 2025-09-27 19:09:30.283674 - User: ceejay - Path: /api/auth/users/
+2025-09-27 19:14:58.035696 - User: AnonymousUser - Path: /api/auth/token/
+2025-09-27 19:15:22.985206 - User: ceejay - Path: /api/auth/users/
+2025-09-27 19:18:08.890089 - User: AnonymousUser - Path: /api/auth/token/
+2025-09-27 19:18:26.403054 - User: ceejay - Path: /api/auth/users/
