@@ -81,12 +81,7 @@ class RolepermissionMiddleware:
                 request.auth = validated_token
             except Exception:
                 pass  # Leave as AnonymousUser if token is invalid
-    
-        return self.get_response(request)
-
-
-    def process_view(self, request, view_func, view_args, view_kwargs):
         if self.admin_actions.get(request.path) and request.method == self.admin_actions.get(request.path).get("method"):
-            if not request.user.is_authenticated or request.user != 'ADMIN':
+            if not request.user.is_authenticated or request.user.role != 'ADMIN':
                 return HttpResponse("Unauthorized", status=401)
-        return None  # continue as normal
+        return self.get_response(request)
