@@ -11,16 +11,14 @@ class UserSerializer(ModelSerializer):
             'user_id', 'username', 'password',
             'confirm_password', 'first_name', 'last_name', 
             'email', 'phone_number', 'role', 'created_at',
-            
             )
-
     
 
     def validate(self, attrs):
         password = attrs.get('password')
         confirm_password = attrs.get('confirm_password')
         if password != confirm_password:
-            raise serializers.ValidationError('passwords do not match')
+            raise serializers.ValidationError({'password': 'passwords do not match'})
         return attrs
     def create(self, validated_data):
         validated_data.pop("confirm_password")
