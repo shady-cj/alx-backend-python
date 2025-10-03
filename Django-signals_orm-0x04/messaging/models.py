@@ -4,7 +4,7 @@ from django.db import models
 
 from django.contrib.auth.models import AbstractUser
 import uuid
-from .managers import UnreadMessageManagerQueryset
+from .managers import CustomUnreadMessageManager
 
 
 
@@ -37,7 +37,8 @@ class Message(models.Model):
     # objects = UnreadMessagesManager()
 
     # queryset version allows chaining
-    objects = UnreadMessageManagerQueryset.as_manager()
+    objects = models.Manager()  # The default manager.
+    unread = CustomUnreadMessageManager()
 
 
 
