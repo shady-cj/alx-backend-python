@@ -51,6 +51,11 @@ class UserViewSet(viewsets.ModelViewSet):
     filter_backends = [filters.SearchFilter]
     search_fields = ['username', 'email', 'first_name', 'last_name']
 
+
+    # handles delete_user 
+    # user.delete()
+    # 
+
     def get_permissions(self):
         if self.request.method == "POST" and 'pk' not in self.kwargs:
             # Allow registration of new users

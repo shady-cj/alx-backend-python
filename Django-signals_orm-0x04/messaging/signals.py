@@ -31,6 +31,7 @@ def log_edited_message(sender, instance, **kwargs):
 @receiver(post_delete, sender=User)
 def user_destroy_cleanup(sender, instance, **kwargs):
     instance.sent_messages.all().delete()
+    # or Message.objects.filter(sender=instance).delete()
     instance.notifications.all().delete()
 
 
