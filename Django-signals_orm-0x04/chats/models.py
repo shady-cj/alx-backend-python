@@ -23,9 +23,8 @@ class User(AbstractUser):
 
 class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    sender = models.ForeignKey(User, related_name="sent_messages", null=True, on_delete=models.SET_NULL)
-    receiver = models.ForeignKey(User, related_name = "received_messages", null=True, on_delete=models.SET_NULL)
-    content = models.TextField(null=False, blank=False)
+    sender_id = models.ForeignKey(User, related_name="messages", null=True, on_delete=models.SET_NULL)
+    message_body = models.TextField(null=False, blank=False)
     sent_at = models.DateTimeField(auto_now_add=True)
     
 
@@ -37,9 +36,4 @@ class Conversation(models.Model):
     messages = models.ManyToManyField(Message, related_name='conversation', blank=True)
 
 
-class Notification(models.Model):
-    notification_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    message = models.ForeignKey(Message, null=True, on_delete=models.SET_NULL)
-    user = models.ForeignKey(User, related_name='notifications', null=True, on_delete=models.SET_NULL)
-    is_read = models.BooleanField(default=False)
 

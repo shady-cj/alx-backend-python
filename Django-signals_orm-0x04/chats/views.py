@@ -18,7 +18,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     filter_backends = [filters.SearchFilter]
-    search_fields = ['content', 'sender__username', 'receiver_']
+    search_fields = ['message_body', 'sender_id__username']
 
     def get_queryset(self):
         return super().get_queryset().filter(conversation__conversation_id=self.kwargs['conversation_conversation_id']).distinct()
