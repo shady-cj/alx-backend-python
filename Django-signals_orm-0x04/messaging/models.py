@@ -25,7 +25,16 @@ class Message(models.Model):
     message_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     sender = models.ForeignKey(User, related_name="sent_messages", null=True, on_delete=models.SET_NULL)
     receiver = models.ForeignKey(User, related_name = "received_messages", null=True, on_delete=models.SET_NULL)
+    edited = models.BooleanField(default=False)
     content = models.TextField(null=False, blank=False)
+    edited_at = models.DateTimeField(null=True, blank=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
+
+
+class MessageHistory(models.Model):
+    history_id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    message = models.ForeignKey(Message, related_name="histories", null=True, on_delete=models.CASCADE)
+    old_content = models.TextField(null=False, blank=False)
     timestamp = models.DateTimeField(auto_now_add=True)
     
 
