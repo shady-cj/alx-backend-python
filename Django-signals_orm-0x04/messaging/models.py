@@ -32,7 +32,7 @@ class Message(models.Model):
     edited_at = models.DateTimeField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     parent_message = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='replies')
-    read = models.BooleanField(default=False)
+    unread = models.BooleanField(default=True)
 
     # objects = UnreadMessagesManager()
 
