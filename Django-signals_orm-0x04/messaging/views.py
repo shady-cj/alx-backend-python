@@ -33,6 +33,10 @@ class MessageViewSet(viewsets.ModelViewSet):
         # Message.objects.filter()
         # raise HTTP_403_FORBIDDEN if not permitted
         user = self.request.user
+        queryparams = self.request.query_params
+        unread = queryparams.get('unread', None)
+        if unread and unread.lower() == 'true':
+            return Message.objects.select_related('sender', 'receiver').prefetch_related('replies').unread_messages().filter(conversation__conversation_id=self.kwargs['conversation_pk'], conversation__participants=user.user_id).distinct()
         return Message.objects.select_related('sender', 'receiver').prefetch_related('replies').filter(conversation__conversation_id=self.kwargs['conversation_pk'], conversation__participants=user.user_id).distinct()
     
     def perform_create(self, serializer):

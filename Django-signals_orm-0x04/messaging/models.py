@@ -6,6 +6,14 @@ from django.contrib.auth.models import AbstractUser
 import uuid
 
 
+class UnreadMessagesManager(models.Manager):
+    def unread_messages(self):
+        return self.get_queryset().only("message_id", "sender", "receiver", "content").filter(read=False)
+    
+class UnreadMessageManagerQueryset(models.QuerySet):
+    def unread_messages(self):
+        return self.get_queryset().only("message_id", "sender", "receiver", "content").filter(read=False)
+
 class User(AbstractUser):
     ROLE = (
         ('GUEST', 'guest'),
@@ -30,6 +38,17 @@ class Message(models.Model):
     edited_at = models.DateTimeField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
     parent_message = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='replies')
+    read = models.BooleanField(default=False)
+
+    # objects = UnreadMessagesManager()
+
+    # queryset version allows chaining
+    objects = UnreadMessageManagerQueryset.as_manager()
+
+
+
+
+
 
 
 class MessageHistory(models.Model):
