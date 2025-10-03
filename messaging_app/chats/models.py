@@ -35,6 +35,8 @@ class Conversation(models.Model):
     participants_id = models.ManyToManyField(User, related_name='conversations', blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
     messages = models.ManyToManyField(Message, related_name='conversation', blank=True)
+    class Meta:
+        ordering = ['-created_at']
 
 
 class Notification(models.Model):

@@ -1,0 +1,208 @@
+{
+  "info": {
+    "name": "Chat API",
+    "_postman_id": "chat-api-collection",
+    "description": "Test suite for your chat API endpoints",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Register User",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/auth/users/",
+          "host": ["{{base_url}}"],
+          "path": ["auth", "users", ""]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"TestPass123!\",\n    \"confirm_password\": \"TestPass123!\",\n    \"first_name\": \"Test\",\n    \"last_name\": \"User\",\n    \"email\": \"testuser@example.com\"\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Obtain JWT Token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/auth/token/",
+          "host": ["{{base_url}}"],
+          "path": ["auth", "token", ""]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"username\": \"testuser\",\n    \"password\": \"TestPass123!\"\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Refresh JWT Token",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/auth/token/refresh/",
+          "host": ["{{base_url}}"],
+          "path": ["auth", "token", "refresh", ""]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"refresh\": \"{{refresh_token}}\"\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Conversations",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/conversations/",
+          "host": ["{{base_url}}"],
+          "path": ["conversations", ""]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Conversation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/conversations/",
+          "host": ["{{base_url}}"],
+          "path": ["conversations", ""]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"participants_id\": [\"{{user_id_1}}\", \"{{user_id_2}}\"]\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Messages in Conversation",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/conversations/{{conversation_pk}}/messages/",
+          "host": ["{{base_url}}"],
+          "path": ["conversations", "{{conversation_pk}}", "messages", ""]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Create Message in Conversation",
+      "request": {
+        "method": "POST",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          },
+          {
+            "key": "Content-Type",
+            "value": "application/json"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/conversations/{{conversation_pk}}/messages/",
+          "host": ["{{base_url}}"],
+          "path": ["conversations", "{{conversation_pk}}", "messages", ""]
+        },
+        "body": {
+          "mode": "raw",
+          "raw": "{\n    \"message_body\": \"Hello from Postman!\"\n}"
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "List Users",
+      "request": {
+        "method": "GET",
+        "header": [
+          {
+            "key": "Authorization",
+            "value": "Bearer {{access_token}}"
+          }
+        ],
+        "url": {
+          "raw": "{{base_url}}/users/",
+          "host": ["{{base_url}}"],
+          "path": ["users", ""]
+        }
+      },
+      "response": []
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api"
+    },
+    {
+      "key": "access_token",
+      "value": ""
+    },
+    {
+      "key": "refresh_token",
+      "value": ""
+    },
+    {
+      "key": "conversation_pk",
+      "value": ""
+    },
+    {
+      "key": "user_id_1",
+      "value": ""
+    },
+    {
+      "key": "user_id_2",
+      "value": ""
+    }
+  ]
+}

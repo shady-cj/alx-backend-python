@@ -38,6 +38,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
+    'rest_framework_simplejwt',
+    'django_filters',
     'chats'
 ]
 
@@ -82,19 +84,30 @@ DATABASES = {
 }
 
 AUTH_USER_MODEL = 'chats.User'
+USER_ID_FIELD = "user_id"
 
 
 # REST FRAMEWORK SETTINGS
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework_simplejwt.authentication.JWTAuthentication',
         'rest_framework.authentication.BasicAuthentication',
         'rest_framework.authentication.SessionAuthentication',
     ],
     'DEFAULT_PERMISSION_CLASSES': [
         'rest_framework.permissions.IsAuthenticated',
-    ]
-}   
+    ], 
+
+    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
+    'PAGE_SIZE': 20
+} 
+
+
+SIMPLE_JWT = {
+    'USER_ID_FIELD': 'user_id',   # Default is 'id'
+    'USER_ID_CLAIM': 'user_id',   # This is the claim key in the JWT payload
+}
 
 
 # Password validation
