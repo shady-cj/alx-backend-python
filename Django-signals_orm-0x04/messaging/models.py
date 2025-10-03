@@ -26,7 +26,7 @@ class Message(models.Model):
     sender = models.ForeignKey(User, related_name="sent_messages", null=True, on_delete=models.SET_NULL)
     receiver = models.ForeignKey(User, related_name = "received_messages", null=True, on_delete=models.SET_NULL)
     content = models.TextField(null=False, blank=False)
-    sent_at = models.DateTimeField(auto_now_add=True)
+    timestamp = models.DateTimeField(auto_now_add=True)
     
 
 
