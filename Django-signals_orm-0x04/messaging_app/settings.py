@@ -40,7 +40,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'rest_framework_simplejwt',
     'django_filters',
-    'chats'
+    'messaging'
 ]
 
 MIDDLEWARE = [
@@ -83,7 +83,7 @@ DATABASES = {
     }
 }
 
-AUTH_USER_MODEL = 'chats.User'
+AUTH_USER_MODEL = 'messaging.User'
 USER_ID_FIELD = "user_id"
 
 
