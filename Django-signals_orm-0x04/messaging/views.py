@@ -11,6 +11,9 @@ from .permissions import IsParticipantOfConversation
 from .filters import MessageFilter
 from .pagination import CustomPagination
 
+from django.views.decorators.cache import cache_page
+from django.utils.decorators import method_decorator
+
 
 class ConversationViewSet(viewsets.ModelViewSet):
     queryset = Conversation.objects.all()
@@ -29,6 +32,9 @@ class MessageViewSet(viewsets.ModelViewSet):
     permission_classes = [IsParticipantOfConversation]
     pagination_class = CustomPagination
 
+    @method_decorator(cache_page(60))  # Cache for 1 minute
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs) 
     def get_queryset(self):
         # Message.objects.filter()
         # raise HTTP_403_FORBIDDEN if not permitted
@@ -36,7 +42,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         queryparams = self.request.query_params
         unread = queryparams.get('unread', None)
         if unread and unread.lower() == 'true':
-            return Message.unread.unread_for_user(user=user).only("message_id", "sender", "receiver", "content")
+            return Message.unread.unread_for_user(user=user).only("message_id", "sender", "receiver", "content").all()
         return Message.objects.select_related('sender', 'receiver').prefetch_related('replies').filter(conversation__conversation_id=self.kwargs['conversation_pk'], conversation__participants=user.user_id).distinct()
     
     def perform_create(self, serializer):
