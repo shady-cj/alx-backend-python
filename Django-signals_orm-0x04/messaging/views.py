@@ -33,7 +33,7 @@ class MessageViewSet(viewsets.ModelViewSet):
         # Message.objects.filter()
         # raise HTTP_403_FORBIDDEN if not permitted
         user = self.request.user
-        return super().get_queryset().filter(conversation__conversation_id=self.kwargs['conversation_pk'], conversation__participants=user.user_id).distinct()
+        return Message.objects.select_related('sender', 'receiver').prefetch_related('replies').filter(conversation__conversation_id=self.kwargs['conversation_pk'], conversation__participants=user.user_id).distinct()
     
     def perform_create(self, serializer):
         conversation_pk = self.kwargs.get('conversation_pk')

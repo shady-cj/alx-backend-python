@@ -29,6 +29,7 @@ class Message(models.Model):
     content = models.TextField(null=False, blank=False)
     edited_at = models.DateTimeField(null=True, blank=True)
     timestamp = models.DateTimeField(auto_now_add=True)
+    parent_message = models.ForeignKey('self', null=True, blank=True, on_delete=models.SET_NULL, related_name='replies')
 
 
 class MessageHistory(models.Model):

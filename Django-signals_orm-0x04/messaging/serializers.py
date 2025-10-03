@@ -30,9 +30,19 @@ class UserSerializer(ModelSerializer):
 
     
 class MessageSerializer(ModelSerializer):
+    replies = serializers.SerializerMethodField()
     class Meta:
         model = Message
-        fields = '__all__'
+        fields = [
+            "message_id", "sender", "receiver", "content", "timestamp", "parent_message", "replies"
+        ]
+
+    def get_replies(self, instance):
+        replies = instance.replies.all()
+        return MessageSerializer(replies, many=True, read_only=True).data
+    
+    
+    
 
     
 
@@ -52,6 +62,7 @@ class ConversationSerializer(ModelSerializer):
 
     def get_messages(self, instance):
         messages = instance.messages
+        messages = Conversation.objects.prefetch_related('messages').get(pk=instance.id).messages.all()
         return MessageSerializer(messages, many=True, read_only=True).data
     
     def create(self, validated_data):
