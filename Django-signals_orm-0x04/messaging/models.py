@@ -4,15 +4,9 @@ from django.db import models
 
 from django.contrib.auth.models import AbstractUser
 import uuid
+from .managers import UnreadMessageManagerQueryset
 
 
-class UnreadMessagesManager(models.Manager):
-    def unread_messages(self):
-        return self.get_queryset().only("message_id", "sender", "receiver", "content").filter(read=False)
-    
-class UnreadMessageManagerQueryset(models.QuerySet):
-    def unread_messages(self):
-        return self.only("message_id", "sender", "receiver", "content").filter(read=False)
 
 class User(AbstractUser):
     ROLE = (
