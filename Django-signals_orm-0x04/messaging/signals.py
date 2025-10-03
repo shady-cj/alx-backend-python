@@ -21,7 +21,8 @@ def log_edited_message(sender, instance, **kwargs):
             # Log the previous content to MessageHistory
             MessageHistory.objects.create(
                 message=previous_message,
-                old_content=previous_message.content
+                old_content=previous_message.content,
+                edited_by=instance.sender
             )
             instance.edited = True
             instance.edited_at = timezone.now()

@@ -38,7 +38,7 @@ class MessageViewSet(viewsets.ModelViewSet):
     def perform_create(self, serializer):
         conversation_pk = self.kwargs.get('conversation_pk')
         conversation = Conversation.objects.get(conversation_id=conversation_pk)
-        instance = serializer.save()
+        instance = serializer.save(sender=self.request.user)
         conversation.messages.add(instance)
          # Notify other participants
         return instance

@@ -34,6 +34,8 @@ class MessageSerializer(ModelSerializer):
         model = Message
         fields = '__all__'
 
+    
+
 # class ConversationSerializer(ModelSerializer):
 #     messages = MessageSerializer(many=True, read_only=True)
 #     class Meta:
