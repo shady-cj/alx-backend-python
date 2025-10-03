@@ -17,14 +17,14 @@ class ConversationViewSet(viewsets.ModelViewSet):
     serializer_class = ConversationSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
     permission_classes = [IsParticipantOfConversation]
-    search_fields = ['participants_id__username', 'messages__message_body']
-    filterset_fields = ["participants_id"]
+    search_fields = ['participants__username', 'messages__content']
+    filterset_fields = ["participants"]
 
 class MessageViewSet(viewsets.ModelViewSet):
     queryset = Message.objects.all()
     serializer_class = MessageSerializer
     filter_backends = [DjangoFilterBackend, filters.SearchFilter]
-    search_fields = ['message_body', 'sender_id__username']
+    search_fields = ['content', 'sender__username', 'receiver__username']
     filterset_class = MessageFilter
     permission_classes = [IsParticipantOfConversation]
     pagination_class = CustomPagination
@@ -33,7 +33,15 @@ class MessageViewSet(viewsets.ModelViewSet):
         # Message.objects.filter()
         # raise HTTP_403_FORBIDDEN if not permitted
         user = self.request.user
-        return super().get_queryset().filter(conversation__conversation_id=self.kwargs['conversation_pk'], conversation__participants_id=user.user_id).distinct()
+        return super().get_queryset().filter(conversation__conversation_id=self.kwargs['conversation_pk'], conversation__participants=user.user_id).distinct()
+    
+    def perform_create(self, serializer):
+        conversation_pk = self.kwargs.get('conversation_pk')
+        conversation = Conversation.objects.get(conversation_id=conversation_pk)
+        instance = serializer.save()
+        conversation.messages.add(instance)
+         # Notify other participants
+        return instance
 
 
 

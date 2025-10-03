@@ -46,8 +46,23 @@ class ConversationSerializer(ModelSerializer):
 
     class Meta:
         model = Conversation
-        fields = ('conversation_id', 'participants_id', 'created_at', 'messages')
+        fields = ('conversation_id', 'participants', 'created_at', 'messages')
 
     def get_messages(self, instance):
         messages = instance.messages
         return MessageSerializer(messages, many=True, read_only=True).data
+    
+    def create(self, validated_data):
+        participants = validated_data.pop('participants', [])
+        conversation = Conversation.objects.create(**validated_data)
+        conversation.participants.set(participants)
+        return conversation
+    
+    def update(self, instance, validated_data):
+        new_participants = validated_data.pop('participants', [])
+        for attr, value in validated_data.items():
+            setattr(instance, attr, value)
+        instance.participants.add(*new_participants)
+        instance.save()
+
+    
