@@ -12,7 +12,7 @@ class UnreadMessagesManager(models.Manager):
     
 class UnreadMessageManagerQueryset(models.QuerySet):
     def unread_messages(self):
-        return self.get_queryset().only("message_id", "sender", "receiver", "content").filter(read=False)
+        return self.only("message_id", "sender", "receiver", "content").filter(read=False)
 
 class User(AbstractUser):
     ROLE = (
