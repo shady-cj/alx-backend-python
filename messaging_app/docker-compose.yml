@@ -6,6 +6,7 @@ services:
     restart: always
     ports:     
       - "8000:8000"   
+    command: ["python", "manage.py", "runserver", "0.0.0.0:8000"]
     networks:      
       - backend  
     # volumes:      
@@ -26,6 +27,8 @@ services:
     environment:
       - MYSQL_ROOT_PASSWORD: /run/secrets/mysql_password
       - MYSQL_PASSWORD: /run/secrets/mysql_password
+      - MYSQL_USER: ${MYSQL_USER}
+      - MYSQL_DATABASE: ${MYSQL_DATABASE}
     secrets:
       - mysql_password
 
