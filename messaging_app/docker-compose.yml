@@ -12,7 +12,11 @@ services:
     # volumes:      
     #   - shared-volume:/usr/share/nginx/html
     depends_on:
-      - db
+      db:
+        condition: service_healthy
+        restart: true
+
+        
 
   db:   
     image: mysql:8.0
@@ -31,6 +35,11 @@ services:
       - MYSQL_DATABASE: ${MYSQL_DATABASE}
     secrets:
       - mysql_password
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
 networks:  
   backend:   
