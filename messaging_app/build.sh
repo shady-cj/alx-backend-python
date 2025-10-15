@@ -1,0 +1,1 @@
+docker build . -t chat-app-image --progress=plain --no-cache
