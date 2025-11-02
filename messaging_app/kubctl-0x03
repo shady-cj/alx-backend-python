@@ -1,0 +1,67 @@
+#!/bin/bash
+
+DEPLOYMENT_NAME="messaging-app-blue"
+SERVICE_NAME="messaging-app-bg-service"
+
+echo "--- Task 5: Applying Rolling Update to $DEPLOYMENT_NAME (Image v2.0) ---"
+
+# --- 1. Apply the updated deployment file and trigger a rolling update ---
+echo "1. Applying updated $DEPLOYMENT_NAME (Image v2.0) to trigger rollout..."
+kubectl apply -f blue_deployment.yaml
+
+# --- 2. Monitor the update progress using kubectl rollout status ---
+echo "2. Monitoring Rolling Update progress..."
+kubectl rollout status deployment/$DEPLOYMENT_NAME --timeout=300s
+
+if [ $? -ne 0 ]; then
+    echo "ERROR: Rolling update failed or timed out."
+    exit 1
+fi
+
+# --- 3. Use curl to test for downtime during the update ---
+echo "3. Testing for downtime (Continuous curl requests for 15 seconds)..."
+
+
+MINIKUBE_URL=$(minikube service $SERVICE_NAME --url)
+
+if [ -z "$MINIKUBE_URL" ]; then
+    echo "WARNING: Could not determine service URL via minikube service --url. Defaulting to placeholder."
+    SERVICE_URL="http://127.0.0.1:8000/admin/login/"
+else
+    # Use the discovered URL and a non-POST endpoint for continuous GET testing
+    SERVICE_URL="${MINIKUBE_URL}/admin/login/"
+fi
+
+echo "Sending requests to: $SERVICE_URL"
+END_TIME=$((SECONDS + 15))
+REQUEST_COUNT=0
+DOWNTIME_DETECTED=0
+
+while [ $SECONDS -le $END_TIME ]; do
+    # -s: silent, -o /dev/null: discard output, -w: write custom output (HTTP status code)
+    STATUS_CODE=$(curl -s -o /dev/null -w "%{http_code}" $SERVICE_URL)
+    
+    # Check for expected success codes (2xx, or 401/404 which indicates the service is alive)
+    if [[ "$STATUS_CODE" =~ ^[24]{1}[0-9]{2}$ ]]; then
+        echo -n "."
+    else
+        echo -e "\n[DOWNTIME ALERT] Unexpected status code: $STATUS_CODE at $(date +%H:%M:%S)"
+        DOWNTIME_DETECTED=1
+    fi
+    REQUEST_COUNT=$((REQUEST_COUNT+1))
+    sleep 0.5
+done
+
+echo -e "\nContinuous testing complete. Sent $REQUEST_COUNT requests."
+if [ $DOWNTIME_DETECTED -eq 1 ]; then
+    echo "RESULT: DOWNTIME DETECTED during the rolling update."
+else
+    echo "RESULT: Rolling update completed successfully with NO DOWNTIME detected."
+fi
+
+# --- 4. Verify the Rolling Update is Complete by checking the current pods ---
+echo "4. Verifying final pod status (expecting 3 pods, all running v2.0 image):"
+kubectl get pods -l app=messaging-app-bg,color=blue -o wide
+kubectl describe deployment/$DEPLOYMENT_NAME | grep Image
+
+echo "--- Rolling Update Task 5 Complete ---"

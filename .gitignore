@@ -6,4 +6,5 @@ instance/
 .pytest_cache/
 .coverage
 htmlcov/
+mysql_password.txt
 django-venv/

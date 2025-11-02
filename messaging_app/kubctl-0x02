@@ -1,0 +1,48 @@
+#!/bin/bash
+
+BLUE_DEPLOYMENT="messaging-app-blue"
+GREEN_DEPLOYMENT="messaging-app-green"
+SERVICE_NAME="messaging-app-bg-service"
+
+echo "--- Task 4: Blue-Green Deployment Strategy ---"
+
+# --- 1. Deploy the Blue (Current) and Green (New) versions ---
+echo "1. Deploying Blue Deployment ($BLUE_DEPLOYMENT) (v1.0.0)..."
+kubectl apply -f blue_deployment.yaml
+
+echo "1. Deploying Green Deployment ($GREEN_DEPLOYMENT) (v2.0.0)..."
+kubectl apply -f green_deployment.yaml
+
+echo "1. Deploying Traffic Service ($SERVICE_NAME), initially pointing to 'blue'..."
+kubectl apply -f kubeservice.yaml
+
+# --- 2. Wait for Green Deployment to be ready ---
+echo "2. Waiting for new Green Deployment pods to be ready..."
+kubectl rollout status deployment/$GREEN_DEPLOYMENT --timeout=120s
+
+if [ $? -ne 0 ]; then
+    echo "ERROR: Green Deployment failed to become ready. Aborting switch."
+    exit 1
+fi
+
+# --- 3. Check logs for the new Green version ---
+# Get the name of a ready green pod
+GREEN_POD_NAME=$(kubectl get pods -l app=messaging-app-bg,color=green -o jsonpath='{.items[0].metadata.name}')
+
+if [ -z "$GREEN_POD_NAME" ]; then
+    echo "ERROR: Green pod name not found. Cannot check logs."
+    exit 1
+fi
+
+echo "3. Checking logs for new Green Pod: $GREEN_POD_NAME"
+# Display the last 20 lines of logs for error checking
+kubectl logs $GREEN_POD_NAME --tail=20
+
+echo "--------------------------------------------------------"
+echo "Deployment successful. Green Pods are running and logs checked."
+echo "Traffic is currently 100% on the BLUE version."
+echo "--------------------------------------------------------"
+echo "ACTION REQUIRED: To switch traffic to the GREEN version (zero-downtime cutover), run:"
+echo ""
+echo "kubectl patch service $SERVICE_NAME -p '{\"spec\":{\"selector\":{\"color\":\"green\"}}}'"
+echo ""

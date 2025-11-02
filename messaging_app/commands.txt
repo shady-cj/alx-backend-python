@@ -1,0 +1,9 @@
+Command 1: Install the Nginx Ingress Controller addon on Minikube
+
+This must be done before applying the Ingress resource.
+
+minikube addons enable ingress
+
+Command 2: Apply the Ingress configuration
+
+kubectl apply -f ingress.yaml
